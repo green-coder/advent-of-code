@@ -1,2 +1,28 @@
 {:paths ["src" "resources"]
- :deps {org.clojure/data.priority-map {:mvn/version "1.0.0"}}}
+ :deps  {;; https://github.com/clojure/data.priority-map
+         org.clojure/data.priority-map  {:mvn/version "1.0.0"}
+
+         ;; https://github.com/clojure/math.combinatorics
+         org.clojure/math.combinatorics {:mvn/version "0.1.6"}
+
+         ;; https://github.com/clojure/core.logic
+         org.clojure/core.logic         {:mvn/version "1.0.0"}
+
+         ;; https://github.com/weavejester/medley
+         ;; http://weavejester.github.io/medley/medley.core.html
+         medley/medley                  {:mvn/version "1.3.0"}
+
+         ;; https://github.com/Engelberg/ubergraph
+         ubergraph/ubergraph            {:mvn/version "0.8.2"}
+
+         ;; https://github.com/green-coder/minimallist
+         ;; https://cljdoc.org/d/minimallist/minimallist
+         minimallist/minimallist        {:mvn/version "0.0.9"}
+
+         ;; https://github.com/green-coder/diffuse
+         ;; https://cljdoc.org/d/diffuse/diffuse
+         diffuse/diffuse                {:mvn/version "0.0.5"}
+
+         ;; https://github.com/lambdaisland/regal
+         ;; https://lambdaisland.github.io/land-of-regal/
+         lambdaisland/regal             {:mvn/version "0.0.89"}}}
