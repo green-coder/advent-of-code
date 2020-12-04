@@ -11,7 +11,7 @@
             [minimallist.helper :as h]
             #_[diffuse.core :as diff]
             #_[diffuse.helper :as dh]
-            [lambdaisland.regal :as regal]))
+            #_[lambdaisland.regal :as regal]))
 
 ;; Inspired from my blog post on transducers:
 ;; https://vincent.404.taipei/clojure/build-your-own-transducer-part3/
@@ -60,31 +60,33 @@
      count)
 
 
-;; Part 2 - let's just use Minimallist with Regal, just for fun.
+;; Part 2 - let's just use Minimallist.
 (def passport-model
-  (let [re-matches (fn [regal-expr text]
-                     (re-matches (regal/regex regal-expr) text))
+  (let [digit-model (h/char-set "0123456789")
+        hexa-model (h/char-set "0123456789abcdef")
         four-digits-between (fn [min max]
-                              (h/fn (fn [x]
-                                      (when-let [n (re-matches [:repeat :digit 4] x)]
-                                        (<= min (Long/parseLong n) max)))))]
+                              (h/and (h/in-string (h/repeat 4 4 digit-model))
+                                     (h/fn (fn [x]
+                                             (<= min (Long/parseLong x) max)))))]
     (-> (h/map
           ["byr" (four-digits-between 1920 2002)]
           ["iyr" (four-digits-between 2010 2020)]
           ["eyr" (four-digits-between 2020 2030)]
-          ["hgt" (h/fn (fn [x]
-                         (when-let [[_ n unit] (re-matches [:cat
-                                                            [:capture [:+ :digit]]
-                                                            [:capture [:alt "cm" "in"]]]
-                                                           x)]
-                           (let [n (Long/parseLong n)]
-                             (case unit
-                               "cm" (<= 150 n 193)
-                               "in" (<= 59 n 79)
-                               false)))))]
-          ["hcl" (h/fn (partial re-matches [:cat "#" [:repeat [:class ["0" "9"] ["a" "f"]] 6]]))]
+          ["hgt" (-> (h/cat [:digit (h/+ digit-model)]
+                            [:unit (h/alt [:cm (h/char-cat "cm")]
+                                          [:in (h/char-cat "in")])])
+                     h/in-string
+                     ;; TODO: need to improve access to parsed data.
+                     (h/with-condition (h/fn (fn [x]
+                                               (let [size (count x)
+                                                     n (Long/parseLong (subs x 0 (- size 2)))
+                                                     unit (subs x (- size 2))]
+                                                 (case unit
+                                                   "cm" (<= 150 n 193)
+                                                   "in" (<= 59 n 79)))))))]
+          ["hcl" (h/in-string (h/cat (h/val \#) (h/repeat 6 6 hexa-model)))]
           ["ecl" (h/enum #{"amb" "blu" "brn" "gry" "grn" "hzl" "oth"})]
-          ["pid" (h/fn (partial re-matches [:repeat :digit 9]))])
+          ["pid" (h/in-string (h/repeat 9 9 digit-model))])
       (h/with-optional-entries ["cid" (h/fn any?)]))))
 
 (->> input

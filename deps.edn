@@ -17,7 +17,7 @@
 
          ;; https://github.com/green-coder/minimallist
          ;; https://cljdoc.org/d/minimallist/minimallist
-         minimallist/minimallist        {:mvn/version "0.0.9"}
+         minimallist/minimallist        {:mvn/version "0.0.10"}
 
          ;; https://github.com/green-coder/diffuse
          ;; https://cljdoc.org/d/diffuse/diffuse
