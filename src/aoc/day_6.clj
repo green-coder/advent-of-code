@@ -10,11 +10,23 @@
 
 
 (def input
-  (->> (line-seq (io/reader (io/resource "day6.txt")))
-       (mapv (fn [line] line))))
+  (-> (slurp (io/reader (io/resource "day6.txt")))
+      (str/split #"\R\R")
+      (->> (mapv str/split-lines))))
 
 ;; Part 1
-(->> input)
+(->> input
+     (map (fn [group]
+            (count (into #{} cat group))))
+     (reduce +))
 
 ;; Part 2.
-(->> input)
+(->> input
+     (map (fn [group]
+            (->> (frequencies (apply str group))
+                 (transduce (keep (fn [[k v]]
+                                    (when (= v (count group))
+                                      1)))
+                            +))))
+     (reduce +))
+
