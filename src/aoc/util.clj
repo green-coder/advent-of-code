@@ -28,3 +28,5 @@
 
 #_ (parse-base-n 36 "10") ; [0-9a-zA-Z]*
 
+(defmacro first-for [& for-args]
+  `(first (for ~@for-args)))
