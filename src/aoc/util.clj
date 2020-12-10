@@ -35,8 +35,8 @@
   `(first (for ~@for-args)))
 
 
-(defn comp-> [& args]
-  (apply comp (reverse args)))
+(defmacro comp-> [& args]
+  `(comp ~@(reverse args)))
 
 #_ ((comp str inc) 17) ; => "18"
 #_ ((comp-> inc str) 17) ; => "18"
