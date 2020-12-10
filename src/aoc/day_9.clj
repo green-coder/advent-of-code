@@ -1,4 +1,5 @@
 (ns aoc.day-9
+  (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.set :as set]
@@ -45,4 +46,20 @@
                                             (subvec input (inc i)))]
               :when (= sum target)]
     (+ -min -max)))
+;; 4023754
+
+
+;; Part 2 - optimized version, O(n)
+(let [target 27911108]
+  (let [[start end]
+        (loop [start 0
+               end 0
+               sum 0]
+          (when (< end (count input))
+            (cond (= sum target) [start end]
+                  (< sum target) (recur start (inc end) (+ sum (input end)))
+                  (> sum target) (recur (inc start) end (- sum (input start))))))]
+    (when (some? start)
+      (+ (apply min (subvec input start end))
+         (apply max (subvec input start end))))))
 ;; 4023754
