@@ -1,4 +1,5 @@
 (ns aoc.day-7
+  (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.set :as set]
@@ -6,7 +7,7 @@
             [clojure.data.priority-map :as pm]
             [clojure.math.combinatorics :as comb]
             [medley.core :as medley]
-            [aoc.util :as util]))
+            [aoc.util :refer :all]))
 
 (defn parse-input [input]
   (->> input
@@ -18,7 +19,7 @@
                     in-color (into {}
                                    (map (fn [contained-expr]
                                          (let [[_ n in-color] (re-matches #"(\d+) (.*) bags?" contained-expr)]
-                                           [in-color (util/parse-number n)])))
+                                           [in-color (parse-number n)])))
                                    contained-exprs)]
                 [out-color in-color])))
        (into {})))
@@ -55,15 +56,10 @@ dark violet bags contain no other bags."
        parse-input))
 
 (def reverse-input
-  (->> (into []
-             (mapcat (fn [[out ins]]
-                       (map (fn [in] [in out]) (keys ins))))
-             input)
-       (reduce (fn [acc [in out]]
-                 (update acc in conj out))
-               (into {}
-                     (map (juxt identity (constantly #{})))
-                     (keys input)))))
+  (->> input
+       (mapcat (fn [[out ins]]
+                 (map (fn [in] [in out]) (keys ins))))
+       (group-by first second conj #{})))
 
 ;; Part 1
 (loop [visited #{}
@@ -76,6 +72,7 @@ dark violet bags contain no other bags."
                          (remove visited)
                          (reverse-input color))]
       (recur visited frontier))))
+; 131
 
 ;; Part 2.
 (def solve
@@ -87,3 +84,4 @@ dark violet bags contain no other bags."
                              1)))))
 
 (dec (solve "shiny gold"))
+; 11261
