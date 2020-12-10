@@ -1,5 +1,7 @@
 (ns aoc.day-1
-  (:require [clojure.java.io :as io]))
+  (:refer-clojure :exclude [group-by])
+  (:require [clojure.java.io :as io]
+            [aoc.util :refer :all]))
 
 (def input
   ;; This small data loading snippet is from @plexus
@@ -10,43 +12,39 @@
 
 
 ;; Part 1
-(-> (for [i (range 0 (count input))
-          j (range (inc i) (count input))
-          :let [x (input i)
-                y (input j)]
-          :when (= 2020 (+ x y))]
-      (* x y))
-    first)
+(first-for [i (range 0 (count input))
+            j (range (inc i) (count input))
+            :let [x (input i)
+                  y (input j)]
+            :when (= 2020 (+ x y))]
+  (* x y))
 
 ;; Part 2
-(-> (for [i (range 0 (count input))
-          j (range (inc i) (count input))
-          k (range (inc j) (count input))
-          :let [x (input i)
-                y (input j)
-                z (input k)]
-          :when (= 2020 (+ x y z))]
-      (* x y z))
-    first)
+(first-for [i (range 0 (count input))
+            j (range (inc i) (count input))
+            k (range (inc j) (count input))
+            :let [x (input i)
+                  y (input j)
+                  z (input k)]
+            :when (= 2020 (+ x y z))]
+  (* x y z))
 
 ;; --- below is the optimized version, using a set lookup for the last step
 
 (def input-set (set input))
 
 ;; Part 1
-(-> (for [i (range 0 (count input))
-          :let [x (input i)
-                y (- 2020 x)]
-          :when (contains? input-set y)]
-      (* x y))
-    first)
+(first-for [i (range 0 (count input))
+            :let [x (input i)
+                  y (- 2020 x)]
+            :when (contains? input-set y)]
+  (* x y))
 
 ;; Part 2
-(-> (for [i (range 0 (count input))
-          j (range (inc i) (count input))
-          :let [x (input i)
-                y (input j)
-                z (- 2020 x y)]
-          :when (contains? input-set z)]
-      (* x y z))
-    first)
+(first-for [i (range 0 (count input))
+            j (range (inc i) (count input))
+            :let [x (input i)
+                  y (input j)
+                  z (- 2020 x y)]
+            :when (contains? input-set z)]
+  (* x y z))
