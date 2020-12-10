@@ -53,13 +53,13 @@
   ([kf vf rf coll]
    (group-by kf vf rf (rf) coll))
   ([kf vf rf init coll]
-   (persistent!
-    (reduce
-     (fn [ret x]
-       (let [k (kf x)
-             v (vf x)]
-         (assoc! ret k (rf (get ret k init) v))))
-     (transient {}) coll))))
+   (->> coll
+        (reduce (fn [ret x]
+                  (let [k (kf x)
+                        v (vf x)]
+                    (assoc! ret k (rf (get ret k init) v))))
+                (transient {}))
+        persistent!)))
 
 #_ (group-by first [[:a 1] [:a 2] [:b 3] [:a 4] [:b 5]])
 #_ (group-by first second [[:a 1] [:a 2] [:b 3] [:a 4] [:b 5]])
