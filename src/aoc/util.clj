@@ -34,6 +34,9 @@
 (defmacro first-for [& for-args]
   `(first (for ~@for-args)))
 
+(defmacro forv [& for-args]
+  `(vec (for ~@for-args)))
+
 
 (defmacro comp-> [& args]
   `(comp ~@(reverse args)))
