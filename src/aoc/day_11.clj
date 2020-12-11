@@ -1,5 +1,5 @@
 (ns aoc.day-11
-  (:refer-clojure :exclude [group-by])
+  (:refer-clojure :exclude [group-by get-in])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.set :as set]
@@ -84,14 +84,16 @@ L.LLLLL.LL"))
   (let [height (count grid)
         width (count (grid 0))
         acc (atom grid)]
-    (forv [row ((if up? range reverse-range) height)
-           :let [prev-row ((if up? dec inc) row)]]
-      (forv [col (range width)]
+    (doseq [row ((if up? range reverse-range) height)
+            :let [prev-row ((if up? dec inc) row)]]
+      (doseq [col (range width)]
         (let [prev-col (+ col col-offset)
               g (get-in grid [prev-row prev-col] \.)
               a (get-in @acc [prev-row prev-col] \.)
               c (if (= g \.) a g)]
-          (swap! acc assoc-in [row col] c))))
+          (swap! acc (fn [grid]
+                       (update grid row (fn [row]
+                                          (assoc row col c))))))))
     @acc))
 #_ (seen-vertical (life input) true 0)
 
@@ -99,14 +101,16 @@ L.LLLLL.LL"))
   (let [height (count grid)
         width (count (grid 0))
         acc (atom grid)]
-    (forv [col ((if left? range reverse-range) width)
-           :let [prev-col ((if left? dec inc) col)]]
-      (forv [row (range height)]
+    (doseq [col ((if left? range reverse-range) width)
+            :let [prev-col ((if left? dec inc) col)]]
+      (doseq [row (range height)]
         (let [prev-row (+ row row-offset)
               g (get-in grid [prev-row prev-col] \.)
               a (get-in @acc [prev-row prev-col] \.)
               c (if (= g \.) a g)]
-          (swap! acc assoc-in [row col] c))))
+          (swap! acc (fn [grid]
+                       (update grid row (fn [row]
+                                          (assoc row col c))))))))
     @acc))
 #_ (seen-horizontal (life input) true 0)
 
