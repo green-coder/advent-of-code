@@ -46,14 +46,14 @@ L.LLLLL.LL"))
                     (fn [i-col elm]
                       (if (= \. elm)
                         elm
-                        (let [nb-occupied-seats (->> surroundings
-                                                     (into []
-                                                           (comp (map (fn [v]
-                                                                         (-> grid
-                                                                             (nth (+ i-row (v 0)) [])
-                                                                             (nth (+ i-col (v 1)) \.))))
-                                                                 (filter #{\#})))
-                                                     count)]
+                        (let [nb-occupied-seats (transduce (map (fn [v]
+                                                                  (if (= \# (-> grid
+                                                                                 (nth (+ i-row (v 0)) [])
+                                                                                 (nth (+ i-col (v 1)) \.)))
+                                                                    1
+                                                                    0)))
+                                                           +
+                                                           surroundings)]
                           (cond (zero? nb-occupied-seats) \#
                                 (>= nb-occupied-seats 4) \L
                                 :else elm)))))
@@ -80,66 +80,48 @@ L.LLLLL.LL"))
   ([coll [row col] default]
    `(-> ~coll (nth ~row []) (nth ~col ~default))))
 
-(defn seen-up [grid x-offset]
+(defn seen-vertical [grid up? col-offset]
   (let [height (count grid)
         width (count (grid 0))
         acc (atom grid)]
-    (forv [i-row (range height)]
-      (forv [i-col (range width)]
-        (let [g (get-in grid [(dec i-row) (+ i-col x-offset)] \.)
-              a (get-in @acc [(dec i-row) (+ i-col x-offset)] \.)
+    (forv [row ((if up? range reverse-range) height)
+           :let [prev-row ((if up? dec inc) row)]]
+      (forv [col (range width)]
+        (let [prev-col (+ col col-offset)
+              g (get-in grid [prev-row prev-col] \.)
+              a (get-in @acc [prev-row prev-col] \.)
               c (if (= g \.) a g)]
-          (swap! acc assoc-in [i-row i-col] c))))
+          (swap! acc assoc-in [row col] c))))
     @acc))
-;(seen-up (life input) 0)
+#_ (seen-vertical (life input) true 0)
 
-(defn seen-down [grid x-offset]
+(defn seen-horizontal [grid left? row-offset]
   (let [height (count grid)
         width (count (grid 0))
         acc (atom grid)]
-    (forv [i-row (range (dec height) -1 -1)]
-      (forv [i-col (range width)]
-        (let [g (get-in grid [(inc i-row) (+ i-col x-offset)] \.)
-              a (get-in @acc [(inc i-row) (+ i-col x-offset)] \.)
+    (forv [col ((if left? range reverse-range) width)
+           :let [prev-col ((if left? dec inc) col)]]
+      (forv [row (range height)]
+        (let [prev-row (+ row row-offset)
+              g (get-in grid [prev-row prev-col] \.)
+              a (get-in @acc [prev-row prev-col] \.)
               c (if (= g \.) a g)]
-          (swap! acc assoc-in [i-row i-col] c))))
+          (swap! acc assoc-in [row col] c))))
     @acc))
-
-(defn seen-left [grid y-offset]
-  (let [height (count grid)
-        width (count (grid 0))
-        acc (atom grid)]
-    (forv [i-col (range width)]
-      (forv [i-row (range height)]
-        (let [g (get-in grid [(+ i-row y-offset) (dec i-col)] \.)
-              a (get-in @acc [(+ i-row y-offset) (dec i-col)] \.)
-              c (if (= g \.) a g)]
-          (swap! acc assoc-in [i-row i-col] c))))
-    @acc))
-
-(defn seen-right [grid y-offset]
-  (let [height (count grid)
-        width (count (grid 0))
-        acc (atom grid)]
-    (forv [i-col (range (dec width) -1 -1)]
-      (forv [i-row (range height)]
-        (let [g (get-in grid [(+ i-row y-offset) (inc i-col)] \.)
-              a (get-in @acc [(+ i-row y-offset) (inc i-col)] \.)
-              c (if (= g \.) a g)]
-          (swap! acc assoc-in [i-row i-col] c))))
-    @acc))
-
-;(seen-right (life input) 0)
+#_ (seen-horizontal (life input) true 0)
 
 (defn life2 [grid]
-  (let [up-left (seen-up grid -1)
-        up (seen-up grid 0)
-        up-right (seen-up grid 1)
-        down-left (seen-down grid -1)
-        down (seen-down grid 0)
-        down-right (seen-down grid 1)
-        left (seen-left grid 0)
-        right (seen-right grid 0)]
+  (let [up-left (seen-vertical grid true -1)
+        up (seen-vertical grid true 0)
+        up-right (seen-vertical grid true 1)
+        down-left (seen-vertical grid false -1)
+        down (seen-vertical grid false 0)
+        down-right (seen-vertical grid false 1)
+        left (seen-horizontal grid true 0)
+        right (seen-horizontal grid false 0)
+        tables [up up-right up-left
+                down down-right down-left
+                left  right]]
     (into []
           (map-indexed
             (fn [i-row row]
@@ -148,17 +130,12 @@ L.LLLLL.LL"))
                       (fn [i-col elm]
                         (if (= \. elm)
                           elm
-                          (let [neighbors (mapv (fn [seen]
-                                                  (get-in seen [i-row i-col]))
-                                                [up
-                                                 up-right
-                                                 up-left
-                                                 down
-                                                 down-right
-                                                 down-left
-                                                 left
-                                                 right])
-                                nb-occupied-seats (count (filter #{\#} neighbors))]
+                          (let [nb-occupied-seats (transduce (map (fn [seen]
+                                                                    (if (= \# (get-in seen [i-row i-col]))
+                                                                      1
+                                                                      0)))
+                                                             +
+                                                             tables)]
                             (cond (zero? nb-occupied-seats) \#
                                   (>= nb-occupied-seats 5) \L
                                   :else elm)))))

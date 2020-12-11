@@ -111,3 +111,38 @@
     [i (min (+ i n) coll-size)]))
 
 #_ (partition-all-indexes 3 10)
+
+
+(defn reverse-range
+  ([end] (range (dec end) -1 -1))
+  ([start end] (range (dec end) (dec start) -1))
+  ([start end step]
+   (range (-> (- end step)
+              (+ (mod (- start end) step)))
+          (- start step)
+          (- 0 step))))
+
+#_ (reverse-range 10)
+#_ (reverse-range 5 10)
+#_ (reverse-range 5 10 3)
+#_ (reverse-range 10 5 -3)
+
+#_ (for [start (range -15 15)
+         end (range -15 15)
+         :when (not= (reverse-range start)
+                     (reverse (range start)))]
+     start)
+
+#_ (for [start (range -15 15)
+         end (range -15 15)
+         :when (not= (reverse-range start end)
+                     (reverse (range start end)))]
+     [start end])
+
+#_ (for [start (range -15 15)
+         end (range -15 15)
+         step (range -15 15)
+         :when (not (zero? step))
+         :when (not= (reverse-range start end step)
+                     (reverse (range start end step)))]
+     [start end step])
