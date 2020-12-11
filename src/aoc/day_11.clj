@@ -48,29 +48,30 @@ L.LLLLL.LL"))
                     (fn [i-col elm]
                       (if (= \. elm)
                         elm
-                        (let [neighbors (mapv (fn [v]
-                                                (get-in grid [(+ i-row (v 0))
-                                                              (+ i-col (v 1))] \.))
-                                              surroundings)
-                              nb-occupied-seats (count (filter #{\#} neighbors))]
-                          ;(prn nb-occupied-seats neighbors)
+                        (let [nb-occupied-seats (->> surroundings
+                                                     (into []
+                                                           (comp (map (fn [v]
+                                                                         (-> grid
+                                                                             (nth (+ i-row (v 0)) [])
+                                                                             (nth (+ i-col (v 1)) \.))))
+                                                                 (filter #{\#})))
+                                                     count)]
                           (cond (zero? nb-occupied-seats) \#
                                 (>= nb-occupied-seats 4) \L
                                 :else elm)))))
                   row)))
         grid))
 
-(let [grid (->> (iterate life input)
-                (partition 2 1)
-                (drop-while (fn [[left right]]
-                              (not= left right)))
-                (take 1)
-                ffirst)]
-  (->> (for [row (range (count grid))
-             col (range (count (grid row)))
-             :when (= \# (get-in grid [row col]))]
-         1)
-       (reduce +)))
+(time
+  (let [grid (->> (iterate life input)
+                  (partition 2 1)
+                  (drop-while (fn [[left right]]
+                                (not= left right)))
+                  ffirst)]
+    (->> grid
+         flatten
+         (filter #{\#})
+         count)))
 
 ;; Part 2.
 (defn seen-up [grid x-offset]
