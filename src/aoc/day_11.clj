@@ -12,9 +12,7 @@
 (defn parse-input [input-str]
   (->> input-str
        str/split-lines
-       (mapv (fn [line]
-               (into []
-                     line)))))
+       (mapv vec)))
 
 ;; Demo input
 (def input
@@ -74,6 +72,14 @@ L.LLLLL.LL"))
          count)))
 
 ;; Part 2.
+
+;; Divides the runtime in half.
+(defmacro get-in
+  ([coll [row col]]
+   `(-> ~coll (nth ~row []) (nth ~col)))
+  ([coll [row col] default]
+   `(-> ~coll (nth ~row []) (nth ~col ~default))))
+
 (defn seen-up [grid x-offset]
   (let [height (count grid)
         width (count (grid 0))
@@ -159,14 +165,13 @@ L.LLLLL.LL"))
                     row)))
           grid)))
 
-(let [grid (->> (iterate life2 input)
-                (partition 2 1)
-                (drop-while (fn [[left right]]
-                              (not= left right)))
-                (take 1)
-                ffirst)]
-  (->> (for [row (range (count grid))
-             col (range (count (grid row)))
-             :when (= \# (get-in grid [row col]))]
-         1)
-       (reduce +)))
+(time (let [grid (->> (iterate life2 input)
+                      (partition 2 1)
+                      (drop-while (fn [[left right]]
+                                    (not= left right)))
+                      (take 1)
+                      ffirst)]
+        (->> grid
+             flatten
+             (filter #{\#})
+             count)))
