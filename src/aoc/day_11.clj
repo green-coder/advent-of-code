@@ -83,7 +83,7 @@ L.LLLLL.LL"))
 (defn seen-vertical [grid up? col-offset]
   (let [height (count grid)
         width (count (grid 0))
-        acc (atom grid)]
+        acc (volatile! grid)]
     (doseq [row ((if up? range reverse-range) height)
             :let [prev-row ((if up? dec inc) row)]]
       (doseq [col (range width)]
@@ -91,16 +91,16 @@ L.LLLLL.LL"))
               g (get-in grid [prev-row prev-col] \.)
               a (get-in @acc [prev-row prev-col] \.)
               c (if (= g \.) a g)]
-          (swap! acc (fn [grid]
-                       (update grid row (fn [row]
-                                          (assoc row col c))))))))
+          (vswap! acc (fn [grid]
+                        (update grid row (fn [row]
+                                           (assoc row col c))))))))
     @acc))
 #_ (seen-vertical (life input) true 0)
 
 (defn seen-horizontal [grid left? row-offset]
   (let [height (count grid)
         width (count (grid 0))
-        acc (atom grid)]
+        acc (volatile! grid)]
     (doseq [col ((if left? range reverse-range) width)
             :let [prev-col ((if left? dec inc) col)]]
       (doseq [row (range height)]
@@ -108,9 +108,9 @@ L.LLLLL.LL"))
               g (get-in grid [prev-row prev-col] \.)
               a (get-in @acc [prev-row prev-col] \.)
               c (if (= g \.) a g)]
-          (swap! acc (fn [grid]
-                       (update grid row (fn [row]
-                                          (assoc row col c))))))))
+          (vswap! acc (fn [grid]
+                        (update grid row (fn [row]
+                                           (assoc row col c))))))))
     @acc))
 #_ (seen-horizontal (life input) true 0)
 
