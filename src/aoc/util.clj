@@ -4,6 +4,20 @@
             [clojure.edn :as edn]
             [clojure.string :as str]))
 
+(defn abs [n]
+  (if (neg? n)
+    (- 0 n)
+    n))
+
+(defn neg [n]
+  (- 0 n))
+
+(defn manhattan-dist
+  ([x y]
+   (+ (abs x) (abs y)))
+  ([x y z]
+   (+ (abs x) (abs y) (abs z))))
+
 (defn parse-number [s]
   (edn/read-string s))
 
