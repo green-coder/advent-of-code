@@ -5,8 +5,14 @@
          ;; https://github.com/clojure/math.combinatorics
          org.clojure/math.combinatorics {:mvn/version "0.1.6"}
 
+         ;; https://github.com/clojure/math.numeric-tower
+         org.clojure/math.numeric-tower {:mvn/version "0.0.4"}
+
          ;; https://github.com/clojure/core.logic
          org.clojure/core.logic         {:mvn/version "1.0.0"}
+
+         ;; To test runtime speed.
+         criterium                      {:mvn/version "0.4.6"}
 
          ;; https://github.com/weavejester/medley
          ;; http://weavejester.github.io/medley/medley.core.html
