@@ -160,3 +160,45 @@
          :when (not= (reverse-range start end step)
                      (reverse (range start end step)))]
      [start end step])
+
+(defmacro red [bindings body]
+  (let [[acc acc-init elm coll] (case (count bindings)
+                                  2 (list* 'acc '_ bindings)
+                                  3 (list* (first bindings) '_ (next bindings))
+                                  4 bindings
+                                  (throw (ex-info "Wrong number of arguments." {:bindings bindings})))]
+
+    `(reduce (fn [~acc ~elm]
+               ~body)
+             ~@(when (not= acc-init '_) [acc-init])
+             ~coll)))
+
+(comment
+  ;; Using reduce
+  (->> (for [x (range 4)
+             y (range 4)
+             :when (not= x y)]
+         [x y])
+       (reduce (fn [acc [a b]]
+                 (update acc a conj b))
+               {}))
+
+  ;; Using red
+  (red [acc {}
+        [a b] (for [x (range 4)
+                    y (range 4)
+                    :when (not= x y)]
+                [x y])]
+    (update acc a conj b))
+
+  ;; With no acc-init
+  (red [acc _
+        n (range 5)]
+    (+ acc n))
+
+  ;; With acc being named acc
+  (red [n (range 5)]
+    (+ acc n))
+
+  ;; test the error
+  (red [5] 7))
