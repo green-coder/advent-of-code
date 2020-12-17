@@ -201,3 +201,35 @@
   ;; With acc being named acc
   (->> (range 5)
        (red n (+ acc n))))
+
+
+
+(defn adjacents [dimension]
+  (-> (iterate (fn [coords]
+                 (mapcat (fn [coord]
+                           (map (fn [x]
+                                  (conj coord x))
+                                [-1 0 1]))
+                         coords))
+               [[]])
+      (nth dimension)
+      (->> (remove (fn [coord]
+                     (every? #{0} coord))))
+      vec))
+
+#_(adjacents 3)
+
+(defmacro neighbors [& coords]
+  (let [dimension (count coords)
+        adj (adjacents dimension)
+        coord-vars (repeatedly dimension #(gensym "coord"))
+        local-vars (repeatedly dimension #(gensym "local"))]
+    `(let [~@(interleave coord-vars coords)]
+       (mapv (fn [[~@local-vars]]
+               [~@(map (fn [lv cv]
+                         `(+ ~lv ~cv))
+                       local-vars
+                       coord-vars)])
+             ~adj))))
+
+#_(neighbors 1 10 100)
