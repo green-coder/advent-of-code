@@ -27,7 +27,7 @@
                y (range nb-cols)
                :when (= (-> slice (nth x) (nth y)) \#)]
            [x y 0])
-         (red acc {} coord (assoc acc coord \#)))))
+         set)))
 
 (defn nb-neighbors-3 [space x y z]
   (->> (for [nx (range -1 2)
@@ -49,7 +49,7 @@
                                     (= 3 n))]
              :when become-active?]
          [x y z])
-       (red acc {} coord (assoc acc coord \#))))
+       set))
 
 (let [nb-rows (count input)
       nb-cols (count (first input))]
@@ -66,6 +66,7 @@
                           (+ 1 cycle)
                           space)]
           (recur space cycle)))))
+;=> 448
 
 
 ;; Part 2
@@ -76,8 +77,7 @@
                y (range nb-cols)
                :when (= (-> slice (nth x) (nth y)) \#)]
            [x y 0 0])
-         (red acc {} coord (assoc acc coord \#)))))
-;(create-space input)
+         set)))
 
 (defn nb-neighbors-4 [space x y z w]
   (->> (for [nx (range -1 2)
@@ -89,7 +89,6 @@
        (filter space)
        count))
 
-; [z row col]
 (defn life-4 [x-min x-sup y-min y-sup z-min z-sup w-min w-sup space]
   (->> (for [x (range x-min x-sup)
              y (range y-min y-sup)
@@ -102,7 +101,7 @@
                                     (= 3 n))]
              :when become-active?]
          [x y z w])
-       (red acc {} coord (assoc acc coord \#))))
+       set))
 
 (let [nb-rows (count input)
       nb-cols (count (first input))]
@@ -121,3 +120,4 @@
                           (+ 1 cycle)
                           space)]
           (recur space cycle)))))
+;=> 2400
