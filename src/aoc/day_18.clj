@@ -35,7 +35,7 @@
 ;; Part 2
 (defn add-parents [line]
   (walk/postwalk (fn [x]
-                   (if (list? x)
+                   (if (sequential? x)
                      (->> x
                           (partition-by #{'*})
                           (map (fn [x]
