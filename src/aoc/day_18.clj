@@ -6,10 +6,6 @@
             [clojure.walk :as walk]
             [aoc.util :refer :all]))
 
-(comment
-  (set! *unchecked-math* :warn-on-boxed)
-  (set! *warn-on-reflection* true))
-
 (defn parse-input [input-str]
   (->> input-str
        str/split-lines
@@ -22,18 +18,18 @@
 ;; Part 1
 (defn calc [line]
   (walk/postwalk (fn [x]
-                   (cond
-                     (number? x) x
-                     (sequential? x) (reduce (fn [acc [op arg]]
-                                               (case op
-                                                 + (+ acc arg)
-                                                 * (* acc arg)))
-                                             (first x)
-                                             (partition 2 (next x)))
-                     #{'+ '*} x))
+                   (if (sequential? x)
+                     (reduce (fn [acc [op arg]]
+                               (case op
+                                 + (+ acc arg)
+                                 * (* acc arg)))
+                             (first x)
+                             (partition 2 (next x)))
+                     x))
                  line))
 
-(->> (map calc input)
+(->> input
+     (map calc)
      (reduce +))
 
 ;; Part 2
