@@ -33,8 +33,8 @@
                                                                 (str/join " " args))
                                                  :text-literal (fn [text-literal]
                                                                  (str "'" text-literal "'"))}))
-      new-grammar (apply str "root = rule0\n" rules)
-      new-parser (insta/parser new-grammar)]
+      new-grammar (apply str rules)
+      new-parser (insta/parser new-grammar :start :rule0)]
   (->> messages
        (map (partial insta/parses new-parser))
        (remove insta/failure?)
