@@ -31,4 +31,7 @@
 
          ;; https://github.com/lambdaisland/regal
          ;; https://lambdaisland.github.io/land-of-regal/
-         lambdaisland/regal             {:mvn/version "0.0.89"}}}
+         lambdaisland/regal             {:mvn/version "0.0.89"}
+
+         ;; https://github.com/Engelberg/instaparse
+         instaparse/instaparse {:mvn/version "1.4.10"}}}
