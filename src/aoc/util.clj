@@ -219,7 +219,7 @@
 
 #_(adjacents 3)
 
-(defmacro neighbors [& coords]
+(defmacro enum-neighbors [& coords]
   (let [dimension (count coords)
         adj (adjacents dimension)
         coord-vars (repeatedly dimension #(gensym "coord"))
@@ -232,4 +232,4 @@
                        coord-vars)])
              ~adj))))
 
-#_(neighbors 1 10 100)
+#_(enum-neighbors 1 10 100)
