@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [group-by])
   (:require [clojure.core :as cc]
             [clojure.edn :as edn]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.math.combinatorics :as comb]))
 
 (defn abs [n]
   (if (neg? n)
@@ -233,3 +234,17 @@
              ~adj))))
 
 #_(enum-neighbors 1 10 100)
+
+(defn get-dimensions [coll]
+  (if (or (sequential? coll) (string? coll))
+    (cons (count coll) (get-dimensions (first coll)))
+    '()))
+
+#_(get-dimensions ["abcd" "efgh"])
+
+(defn enum-coords [coll]
+  (->> (get-dimensions coll)
+       (map range)
+       (apply comb/cartesian-product)))
+
+#_(enum-coords ["abcd" "efgh"])

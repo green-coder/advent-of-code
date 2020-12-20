@@ -21,8 +21,7 @@
   (vec (reverse tile-content)))
 
 (defn rot-cw [tile-content]
-  (let [rows (count tile-content)
-        cols (count (first tile-content))]
+  (let [[rows cols] (get-dimensions tile-content)]
     (forv [c (range cols)]
       (apply str (for [r (range rows)]
                    (get-in tile-content [(- rows 1 r) c]))))))
@@ -105,15 +104,11 @@
                                  (take-while some?))]
                   (->> (tile-id-borders->tile-content each)
                        trim-borders)))
-        row-count (count tiles)
-        col-count (count (first tiles))
-        tile-height (count (first (first tiles)))]
-    [row-count col-count tile-height]
+        [row-count col-count tile-height] (get-dimensions tiles)]
     (forv [row (range row-count)
            tile-row (range tile-height)]
       (apply str (for [col (range col-count)]
                    (get-in tiles [row col tile-row]))))))
-
 
 (def monster
   ["..................#."
@@ -124,18 +119,16 @@
   (all-variants monster))
 
 (defn is-monster-at? [monster pr pc]
-  (let [correlations (for [mr (range (count monster))
-                           mc (range (count (first monster)))]
-                       (if (= \#
-                              (get-in monster [mr mc] \.)
-                              (get-in picture [(+ pr mr) (+ pc mc)] \.))
-                         1
-                         0))]
-    (= (reduce + correlations) 15)))
+  (let [correlations (for [[mr mc] (enum-coords monster)
+                           :when (= \#
+                                    (get-in monster [mr mc] \.)
+                                    (get-in picture [(+ pr mr) (+ pc mc)] \.))]
+                       [mr mc])]
+    (= (count correlations) 15)))
 
+;; Slow. 41 monsters found.
 (def found-monsters
-  (for [pr (range (count picture))
-        pc (range (count (first picture)))
+  (for [[pr pc] (enum-coords picture)
         monster all-monsters
         :when (is-monster-at? monster pr pc)]
     [monster pr pc]))
@@ -143,8 +136,7 @@
 (defn is-on-monster? [pr pc monster mr mc]
   (= \# (get-in monster [(- pr mr) (- pc mc)] \.)))
 
-(-> (for [pr (range (count picture))
-          pc (range (count (first picture)))
+(-> (for [[pr pc] (enum-coords picture)
           :when (= (get-in picture [pr pc]) \#)
           :when (every? (fn [[monster mr mc]]
                           (not (is-on-monster? pr pc monster mr mc)))
