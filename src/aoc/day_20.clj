@@ -17,15 +17,6 @@
   (parse-input (slurp (io/resource "day20.txt"))))
 
 ;; Part 1
-(defn flip-rows [tile-content]
-  (vec (reverse tile-content)))
-
-(defn rot-cw [tile-content]
-  (let [[rows cols] (get-dimensions tile-content)]
-    (forv [c (range cols)]
-      (apply str (for [r (range rows)]
-                   (get-in tile-content [(- rows 1 r) c]))))))
-
 (defn border->number [chars]
   (parse-binary (apply str (map {\# \1 \. \0} chars))))
 
@@ -37,8 +28,8 @@
                         (map first tile-content)]))
 
 (defn all-variants [tile]
-  (vec (concat (take 4 (iterate rot-cw tile))
-               (take 4 (iterate rot-cw (flip-rows tile))))))
+  (vec (concat (take 4 (iterate rot2d-cw tile))
+               (take 4 (iterate rot2d-cw (flip2d-rows tile))))))
 
 (def graph
   (->> input

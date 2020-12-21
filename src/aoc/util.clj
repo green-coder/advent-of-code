@@ -248,3 +248,27 @@
        (apply comb/cartesian-product)))
 
 #_(enum-coords ["abcd" "efgh"])
+
+
+(defn flip2d-rows [grid]
+  (vec (reverse grid)))
+
+(defn flip2d-cols [grid]
+  (mapv str/reverse grid))
+
+(defn rot2d-cw [grid]
+  (let [[rows cols] (get-dimensions grid)]
+    (forv [c (range cols)]
+      (apply str (for [r (range rows)]
+                   (get-in grid [(- rows 1 r) c]))))))
+
+(defn rot2d-ccw [grid]
+  (let [[rows cols] (get-dimensions grid)]
+    (forv [c (range cols)]
+      (apply str (for [r (range rows)]
+                   (get-in grid [r (- cols 1 c)]))))))
+
+#_ (flip2d-rows ["aaaabbbb" "ccccdddd"])
+#_ (flip2d-cols ["aaaabbbb" "ccccdddd"])
+#_ (rot2d-cw ["aaaabbbb" "ccccdddd"])
+#_ (rot2d-ccw ["aaaabbbb" "ccccdddd"])
