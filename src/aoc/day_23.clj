@@ -36,24 +36,23 @@
         lower-label (fn [x]
                       (-> x (- 2) (mod nb-cups) inc))
         fast-game-round (fn [[current-index next-index]]
-                          (let [picked-up-indexes (->> current-index
-                                                       (iterate next-index)
-                                                       (drop 1)
-                                                       (take 3))
-                                picked-up-labels (mapv index->label picked-up-indexes)
-                                dest-label (->> (index->label current-index)
+                          (let [picked-up1-index (next-index current-index)
+                                picked-up2-index (next-index picked-up1-index)
+                                picked-up3-index (next-index picked-up2-index)
+                                dest-label (->> (lower-label (index->label current-index))
                                                 (iterate lower-label)
-                                                (drop 1)
-                                                (remove (set picked-up-labels))
+                                                (remove #{(index->label picked-up1-index)
+                                                          (index->label picked-up2-index)
+                                                          (index->label picked-up3-index)})
                                                 first)
                                 dest-index (label->index dest-label)
                                 next-index (assoc next-index
                                              ;; set the current's next
-                                             current-index (next-index (last picked-up-indexes))
+                                             current-index (next-index picked-up3-index)
                                              ;; set the dest's next
-                                             dest-index (first picked-up-indexes)
+                                             dest-index picked-up1-index
                                              ;; set the last pickup's next
-                                             (last picked-up-indexes) (next-index dest-index))]
+                                             picked-up3-index (next-index dest-index))]
                             [(next-index current-index) next-index]))]
     (-> (iterate fast-game-round [0 next-index])
         (nth nb-rounds))))
@@ -68,7 +67,7 @@
 ;=> "76952348"
 
 ;; Part 2
-#_(let [[current-index next-index] (play-game 1000000 10000000)]
-    (* (-> 1 label->index next-index index->label)
-       (-> 1 label->index next-index next-index index->label)))
+#_ (time (let [[current-index next-index] (play-game 1000000 10000000)]
+           (* (-> 1 label->index next-index index->label)
+              (-> 1 label->index next-index next-index index->label))))
 ;=> 72772522064
