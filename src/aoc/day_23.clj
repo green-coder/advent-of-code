@@ -29,10 +29,10 @@
     (dec label)))
 
 (defn play-game [nb-cups nb-rounds]
-  (let [next-index (into []
-                         (map (fn [index]
-                                (mod (inc index) nb-cups)))
-                         (range nb-cups))
+  (let [next-index (transient (into []
+                                    (map (fn [index]
+                                           (mod (inc index) nb-cups)))
+                                    (range nb-cups)))
         lower-label (fn [x]
                       (-> x (- 2) (mod nb-cups) inc))
         fast-game-round (fn [[current-index next-index]]
@@ -46,7 +46,7 @@
                                                           (index->label picked-up3-index)})
                                                 first)
                                 dest-index (label->index dest-label)
-                                next-index (assoc next-index
+                                next-index (assoc! next-index
                                              ;; set the current's next
                                              current-index (next-index picked-up3-index)
                                              ;; set the dest's next
