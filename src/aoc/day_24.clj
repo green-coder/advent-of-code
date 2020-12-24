@@ -31,10 +31,10 @@
     (disj all-blacks tile-pos)
     (conj all-blacks tile-pos)))
 
-(->> input
-     (map get-tile-pos)
-     (reduce flip-tile #{})
-     count)
+#_(->> input
+       (map get-tile-pos)
+       (reduce flip-tile #{})
+       count)
 ;=> 307
 
 ;; Part 2
@@ -47,30 +47,29 @@
    [(dec x) (dec y)]])
 
 (defn daily-flip [all-blacks]
-  (let [staying-blacks (keep (fn [black-pos]
-                               (when (#{1 2} (->> (neighbors-pos black-pos)
-                                                 (filter all-blacks)
-                                                 count))
-                                 black-pos))
+  (let [staying-blacks (into #{}
+                             (filter (fn [black-pos]
+                                       (#{1 2} (->> (neighbors-pos black-pos)
+                                                    (filter all-blacks)
+                                                    count))))
                              all-blacks)
-        all-white-neighbors (into #{}
-                                  (comp (mapcat neighbors-pos)
-                                        (remove all-blacks))
-                                  all-blacks)
-        appearing-blacks (keep (fn [white-pos]
-                                 (when (= (->> (neighbors-pos white-pos)
-                                               (filter all-blacks)
-                                               count)
-                                          2)
-                                   white-pos))
-                               all-white-neighbors)]
-    (set (concat staying-blacks appearing-blacks))))
+        all-white-neighbors-tx (comp (mapcat neighbors-pos)
+                                     (remove all-blacks))
+        appearing-blacks-tx (filter (fn [white-pos]
+                                      (= (->> (neighbors-pos white-pos)
+                                              (filter all-blacks)
+                                              count)
+                                         2)))]
+    (into staying-blacks
+          (comp all-white-neighbors-tx
+                appearing-blacks-tx)
+          all-blacks)))
 
-(->> input
-     (map get-tile-pos)
-     (reduce flip-tile #{})
-     (iterate daily-flip)
-     (drop 100)
-     first
-     count)
+#_(->> input
+       (map get-tile-pos)
+       (reduce flip-tile #{})
+       (iterate daily-flip)
+       (drop 100)
+       first
+       count)
 ;=> 3787
