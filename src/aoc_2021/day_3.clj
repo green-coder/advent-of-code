@@ -1,10 +1,7 @@
 (ns aoc-2021.day-3
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [clojure.edn :as edn]))
-
-(defn parse-binary [s]
-  (edn/read-string (str "2r" (str/triml s))))
+            [aoc.util :refer [parse-binary]]))
 
 (def input
   (->> (io/resource "2021/day3.txt")
