@@ -1,4 +1,4 @@
-(ns aoc.day-16
+(ns aoc-2020.day-16
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -40,7 +40,7 @@
      :nearby-tickets nearby-tickets}))
 
 (def input
-  (parse-input (slurp (io/resource "day16.txt"))))
+  (parse-input (slurp (io/resource "2020/day16.txt"))))
 
 ;; Part 1
 (defn matches-rule? [[rule-name [[n1 n2] [n3 n4]]] n]

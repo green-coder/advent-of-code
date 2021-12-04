@@ -1,4 +1,4 @@
-(ns aoc.day-15
+(ns aoc-2020.day-15
   (:refer-clojure :exclude [group-by])
   (:require [clojure.string :as str]
             [aoc.util :refer :all]))

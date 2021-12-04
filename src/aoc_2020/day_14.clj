@@ -1,4 +1,4 @@
-(ns aoc.day-14
+(ns aoc-2020.day-14
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -15,7 +15,7 @@
 
 
 (def input
-  (parse-input (slurp (io/resource "day14.txt"))))
+  (parse-input (slurp (io/resource "2020/day14.txt"))))
 
 ;; Part 1
 (->> (reduce (fn [[x-mask v-mask memory] [op arg1 arg2]]

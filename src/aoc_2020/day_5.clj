@@ -1,4 +1,4 @@
-(ns aoc.day-5
+(ns aoc-2020.day-5
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [clojure.set :as set]
@@ -9,7 +9,7 @@
 
 
 (def input
-  (->> (line-seq (io/reader (io/resource "day5.txt")))
+  (->> (line-seq (io/reader (io/resource "2020/day5.txt")))
        (map (fn [line] line))))
 
 

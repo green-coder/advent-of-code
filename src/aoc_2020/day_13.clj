@@ -1,4 +1,4 @@
-(ns aoc.day-13
+(ns aoc-2020.day-13
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -26,7 +26,7 @@
          (filter (comp-> first number?))
          vec)))
 
-(def input (slurp (io/resource "day13.txt")))
+(def input (slurp (io/resource "2020/day13.txt")))
 
 ;; Part 1
 (let [[t0 ids] (parse-input input)]

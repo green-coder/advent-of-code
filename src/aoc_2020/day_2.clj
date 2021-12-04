@@ -1,8 +1,8 @@
-(ns aoc.day-2
+(ns aoc-2020.day-2
   (:require [clojure.java.io :as io]))
 
 (def input
-  (->> (io/resource "day2.txt")
+  (->> (io/resource "2020/day2.txt")
        io/reader
        line-seq
        (mapv (fn [line]

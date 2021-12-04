@@ -1,4 +1,4 @@
-(ns aoc.day-25)
+(ns aoc-2020.day-25)
 
 
 (defn stepper [subject-number]

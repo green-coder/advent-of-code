@@ -1,4 +1,4 @@
-(ns aoc.day-7
+(ns aoc-2020.day-7
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -52,7 +52,7 @@ dark violet bags contain no other bags."
 
 ;; Real input
 (def input
-  (->> (line-seq (io/reader (io/resource "day7.txt")))
+  (->> (line-seq (io/reader (io/resource "2020/day7.txt")))
        parse-input))
 
 (def reverse-input

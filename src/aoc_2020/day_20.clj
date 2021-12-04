@@ -1,4 +1,4 @@
-(ns aoc.day-20
+(ns aoc-2020.day-20
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -14,7 +14,7 @@
        (into {})))
 
 (def input
-  (parse-input (slurp (io/resource "day20.txt"))))
+  (parse-input (slurp (io/resource "2020/day20.txt"))))
 
 ;; Part 1
 (defn border->number [chars]

@@ -1,4 +1,4 @@
-(ns aoc.day-4
+(ns aoc-2020.day-4
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [clojure.set :as set]
@@ -31,7 +31,7 @@
                    result))))))))
 
 (def input
-  (->> (line-seq (io/reader (io/resource "day4.txt")))
+  (->> (line-seq (io/reader (io/resource "2020/day4.txt")))
        (sequence (partition-around str/blank?))
        (map (partial str/join " "))
        (map (fn [passport]

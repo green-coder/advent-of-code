@@ -1,4 +1,4 @@
-(ns aoc.util
+(ns aoc-2020.util
   (:refer-clojure :exclude [group-by])
   (:require [clojure.core :as cc]
             [clojure.edn :as edn]

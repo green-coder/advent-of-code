@@ -1,4 +1,4 @@
-(ns aoc.day-18
+(ns aoc-2020.day-18
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -13,7 +13,7 @@
                (edn/read-string (str "(" line ")"))))))
 
 (def input
-  (parse-input (slurp (io/resource "day18.txt"))))
+  (parse-input (slurp (io/resource "2020/day18.txt"))))
 
 ;; Part 1
 (defn calc [line]

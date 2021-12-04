@@ -1,4 +1,4 @@
-(ns aoc.day-8
+(ns aoc-2020.day-8
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.set :as set]
@@ -9,7 +9,7 @@
             [aoc.util :as util]))
 
 (def input
-  (-> (line-seq (io/reader (io/resource "day8.txt")))
+  (-> (line-seq (io/reader (io/resource "2020/day8.txt")))
       (->> (mapv (fn [line]
                    (let [[_ op sign n] (re-find #"(nop|jmp|acc) (-|\+)(\d+)" line)]
                      [op (cond-> (util/parse-number n)

@@ -1,4 +1,4 @@
-(ns aoc.day-24
+(ns aoc-2020.day-24
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -10,7 +10,7 @@
                (mapv keyword (re-seq #"e|se|sw|w|nw|ne" line))))))
 
 (def input
-  (parse-input (slurp (io/resource "day24.txt"))))
+  (parse-input (slurp (io/resource "2020/day24.txt"))))
 
 ;; Part 1
 (def dir->coord

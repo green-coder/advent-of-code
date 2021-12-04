@@ -1,4 +1,4 @@
-(ns aoc.day-6
+(ns aoc-2020.day-6
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.set :as set]
@@ -10,7 +10,7 @@
 
 
 (def input
-  (-> (slurp (io/reader (io/resource "day6.txt")))
+  (-> (slurp (io/reader (io/resource "2020/day6.txt")))
       (str/split #"\R\R")
       (->> (mapv str/split-lines))))
 

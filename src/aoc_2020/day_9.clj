@@ -1,4 +1,4 @@
-(ns aoc.day-9
+(ns aoc-2020.day-9
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -15,7 +15,7 @@
        (mapv parse-number)))
 
 (def input
-  (parse-input (slurp (io/resource "day9.txt"))))
+  (parse-input (slurp (io/resource "2020/day9.txt"))))
 
 ;; Part 1
 (defn valid? [preamble n]

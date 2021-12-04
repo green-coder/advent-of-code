@@ -1,4 +1,4 @@
-(ns aoc.day-11
+(ns aoc-2020.day-11
   (:refer-clojure :exclude [group-by get-in])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -29,7 +29,7 @@ L.LLLLL.LL"))
 
 ;; Real input
 (def input
-  (parse-input (slurp (io/resource "day11.txt"))))
+  (parse-input (slurp (io/resource "2020/day11.txt"))))
 
 ;; Part 1
 (def surroundings

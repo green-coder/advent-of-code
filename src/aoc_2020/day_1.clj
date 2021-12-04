@@ -1,11 +1,11 @@
-(ns aoc.day-1
+(ns aoc-2020.day-1
   (:refer-clojure :exclude [group-by])
   (:require [clojure.java.io :as io]
             [aoc.util :refer :all]))
 
 (def input
   ;; This small data loading snippet is from @plexus
-  (->> (io/resource "day1.txt")
+  (->> (io/resource "2020/day1.txt")
        io/reader
        line-seq
        (mapv #(Long/parseLong %))))
