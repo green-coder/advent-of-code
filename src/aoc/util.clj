@@ -59,6 +59,14 @@
 #_ ((comp str inc) 17) ; => "18"
 #_ ((comp-> inc str) 17) ; => "18"
 
+(defn seq-indexed [coll]
+  (map-indexed vector coll))
+
+(defn min-by [keyfn coll]
+  (first (sort-by keyfn < coll)))
+
+(defn max-by [keyfn coll]
+  (first (sort-by keyfn > coll)))
 
 (defn group-by
   "Same as clojure.core/group-by, but with some handy new arities which apply
